@@ -63,7 +63,7 @@ class User extends Authenticatable
     }
 
     public function likes(){
-        return $this->hasMany('App\Models\Like', 'user_id') ;
+        return $this->hasMany('App\Models\Like') ;
     }
 
     public function albums(){
@@ -136,6 +136,12 @@ class User extends Authenticatable
             ->count();
     }
 
+    public function hasLikedImage(Album $image){
+        return (bool) $image->likes
+            ->where('user_id', $this->id)
+            ->count();
+    }
+
     public function clearAvatar($user_id){
         $path = "Upload/avatar/id{$user_id}" ;
 
@@ -146,9 +152,7 @@ class User extends Authenticatable
     }
 
     public function getAvatarPath($user_id){
-
         $path = "Upload/avatar/id{$user_id}" ;
-
         if( ! file_exists($path)) mkdir($path, 0777, true) ;
 
         return "/$path/"; 

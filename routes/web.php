@@ -13,114 +13,68 @@ use App\Http\Controllers\AuthController;
 |
 */
 
-Route::get('/', 'App\Http\Controllers\HomeController@index')->middleware('auth')->name('home') ;
 
-// Route::get('/','App\Http\Controllers\AuthController@getSignin')
-//         ->middleware('guest')
-//         ->name('auth.signin');
-
-// if(Auth::check) { 
-//         Route::get('/', 'App\Http\Controllers\HomeController@index')->middleware('auth')->name('home') :
-// };
-
-/*  Authing  */
-
-Route::get('/signup','App\Http\Controllers\AuthController@getSignup')
-        ->middleware('guest')
-        ->name('auth.signup');
-Route::post('/signup','App\Http\Controllers\AuthController@postSignup')
-         ->middleware('guest');
-
-Route::get('/signin','App\Http\Controllers\AuthController@getSignin')
-        ->middleware('guest')
-        ->name('auth.signin');
-
-Route::post('/signin','App\Http\Controllers\AuthController@postSignin')
-         ->middleware('guest') 
-;
-
-Route::get('/signout', 'App\Http\Controllers\AuthController@getSignOut')
-         ->name('auth.signout') ; 
+// ------------------------------------------ THIS ROUTES ARE ABOUT HOME ---------------------------------------------------------
 
 
-/*  Search  */
+Route::prefix('/')->middleware('auth')->group(function () {
+        Route::get('/', 'App\Http\Controllers\HomeController@index')->name('home') ;
+}); 
 
-Route::get('/search', 'App\Http\Controllers\SearchController@getResults')
-          ->middleware('auth')
-          ->name('search.results') ; 
+// ------------------------------------------ THIS ROUTES ARE ABOUT AUTH ---------------------------------------------------------
 
-/*  Profile */
+Route::prefix('/')->middleware('guest')->group(function () {
+        Route::get('signup','App\Http\Controllers\AuthController@getSignup')->name('auth.signup');
+        Route::post('signup','App\Http\Controllers\AuthController@postSignup');
+        Route::get('signin','App\Http\Controllers\AuthController@getSignin')->name('auth.signin');
+        Route::post('signin','App\Http\Controllers\AuthController@postSignin');
+}); 
+ 
+// ------------------------------------------ THIS ROUTES ARE ABOUT SIGNOUT ---------------------------------------------------------
 
-Route::get('/user/{username}','App\Http\Controllers\ProfileController@getProfile')
-          ->middleware('auth')
-          ->name('user.profile'); 
+Route::get('/signout', 'App\Http\Controllers\AuthController@getSignOut')->name('auth.signout') ; 
 
-Route::get('/profile/edit','App\Http\Controllers\ProfileController@getEdit')
-          ->name('profile.edit');
+// ------------------------------------------ THIS ROUTES ARE ABOUT SEARCH ---------------------------------------------------------
 
-Route::post('/profile/edit','App\Http\Controllers\ProfileController@setEdit');
+Route::prefix('search')->middleware('auth')->group(function () {
+        Route::get('/', 'App\Http\Controllers\SearchController@getResults')->middleware('auth')->name('search.results') ; 
+});
 
-/*  Friends */
+// ------------------------------------------ THIS ROUTES ARE ABOUT PROFILE ---------------------------------------------------------
 
-Route::get('/profile/{username}/friends/', 'App\Http\Controllers\FriendController@getIndex')
-          ->middleware('auth')
-          ->name('user.friends'); 
+Route::prefix('profile')->middleware('auth')->group(function () {
+        Route::get('/user/{username}','App\Http\Controllers\ProfileController@getProfile')->name('user.profile'); 
+        Route::get('/edit','App\Http\Controllers\ProfileController@getEdit') ->name('profile.edit');
+        Route::post('/edit','App\Http\Controllers\ProfileController@setEdit');
+}); 
 
-Route::get('/friends/add/{username}/', 'App\Http\Controllers\FriendController@getAdd')
-          ->middleware('auth')
-          ->name('add.friends'); 
-
-Route::get('/friends/accept/{username}/', 'App\Http\Controllers\FriendController@getAccept')
-          ->middleware('auth')
-          ->name('accept.friends'); 
-
-Route::get('/friends/delete/{username}/', 'App\Http\Controllers\FriendController@deleteFriend')
-          ->middleware('auth')
-          ->name('delete.friend'); 
-
-/* Status */
-
-Route::post('/add/status',  'App\Http\Controllers\StatusController@postStatus')
-          ->middleware('auth')
-          ->name('add.status'); 
-
-Route::get('status/destoy/{id}', 'App\Http\Controllers\StatusController@destroy')
-        ->middleware('auth')
-        ->name('destroy.status'); 
-
-          
-Route::post('status/{statusId}/comment', 'App\Http\Controllers\StatusController@postComment')
-        ->middleware('auth')
-        ->name('post.comment'); 
-
-                    
-Route::get('status/{statusId}/like', 'App\Http\Controllers\StatusController@getLike')
-        ->middleware('auth')
-        ->name('get.like'); 
-
-Route::get('/{username}/albums', 'App\Http\Controllers\AlbumController@getAlbum')
-        ->middleware('auth')
-        ->name('get.albums');    
-// Albums 
-Route::post('/add/album', 'App\Http\Controllers\AlbumController@postAlbum')
-        ->middleware('auth')
-        ->name('post.album');          
-
-Route::get('/{username}/albums/{albumId}/images', 'App\Http\Controllers\AlbumController@getImage')
-        ->middleware('auth')
-        ->name('get.image');    
-
-Route::delete('/albums/{albumId}', 'App\Http\Controllers\AlbumController@DeleteAlbum')
-        ->middleware('auth')
-        ->name('delete.album'); 
-
-Route::delete('/albums/{albumId}/image/{imageId}', 'App\Http\Controllers\AlbumController@deleteImage')
-        ->middleware('auth')
-        ->name('delete.image');
-
-Route::post('/albums/{albumId}/images', 'App\Http\Controllers\AlbumController@postImage')
-        ->middleware('auth')
-        ->name('post.image'); 
+// ------------------------------------------ THIS ROUTES ARE ABOUT FRIEND ---------------------------------------------------------
+                                
+Route::prefix('friend')->middleware('auth')->group(function () {
+        Route::get('/profile/{username}', 'App\Http\Controllers\FriendController@getIndex')->name('user.friends'); 
+        Route::get('/add/{username}/', 'App\Http\Controllers\FriendController@getAdd')->name('add.friends'); 
+        Route::get('/accept/{username}/', 'App\Http\Controllers\FriendController@getAccept')->name('accept.friends'); 
+        Route::get('/delete/{username}/', 'App\Http\Controllers\FriendController@deleteFriend')->name('delete.friend'); 
+}); 
 
 
-            
+// ------------------------------------------ THIS ROUTES ARE ABOUT STATUS ---------------------------------------------------------
+
+Route::prefix('status')->middleware('auth')->group(function () {
+        Route::post('/add', 'App\Http\Controllers\StatusController@postStatus')->name('add.status'); 
+        Route::get('/destoy/{id}', 'App\Http\Controllers\StatusController@destroy')->name('destroy.status');      
+        Route::post('/{statusId}/comment', 'App\Http\Controllers\StatusController@postComment')->name('post.comment'); 
+        Route::get('/{statusId}/like', 'App\Http\Controllers\StatusController@getLike')->name('get.like'); 
+});
+
+// ------------------------------------------ THIS ROUTES ARE ABOUT ALBUM  ---------------------------------------------------------
+
+Route::prefix('album')->middleware('auth')->group(function () {
+        Route::get('/{username}', 'App\Http\Controllers\AlbumController@getAlbum')->name('get.albums'); 
+        Route::post('/add', 'App\Http\Controllers\AlbumController@postAlbum')  ->name('post.album');          
+        Route::delete('/{albumId}', 'App\Http\Controllers\AlbumController@DeleteAlbum')->name('delete.album'); 
+        Route::get('/{albumId}/user/{username}', 'App\Http\Controllers\AlbumController@getImage')->name('get.image');    
+        Route::delete('/{albumId}/image/{imageId}', 'App\Http\Controllers\AlbumController@deleteImage')->name('delete.image');
+        Route::post('/{albumId}/images', 'App\Http\Controllers\AlbumController@postImage')->name('post.image'); 
+        Route::get('/{imageId}/like', 'App\Http\Controllers\AlbumController@getLike')->name('get.image.like');    
+});

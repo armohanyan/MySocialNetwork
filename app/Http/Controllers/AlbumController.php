@@ -21,7 +21,7 @@ class AlbumController extends Controller
             ->orderBy('created_at', 'DESC')
             ->get(); 
 
-        return view('user.albums')->with([
+        return view('album.index')->with([
             'user' => $user, 
             'albums' => $albums
         ]); 
@@ -42,45 +42,17 @@ class AlbumController extends Controller
                 ->with('info', 'Album was created successfully ');
     }
 
-    public function deleteAlbum($albumId){
-
-        $album = Album::find($albumId); 
-
-        $image = Album::where('parent_id', $albumId) ;
-
-        if( ! $album ) redirect()->back() ;
-
-        $album->removeAlbum(Auth::user()->id,$albumId); 
-        
-        $album->delete(); 
-        $image->delete(); 
-
-        return redirect()->back()->with('info', 'Album deleted successfully') ; 
-
-    }
-
-    public function deleteImage($albumId, $imageId){
-        $image = Album::find($imageId); 
-    
-        if( ! $image) redirect()->back() ;
-
-        $image->deleteImage($albumId, Auth::user()->id, $image->body) ; 
-
-        $image->delete();
-
-        return redirect()->back();  
-    }
-
-    public function getImage($username, $albumId){
+    public function getImage($albumId, $username){
 
         $user = User::where('username', $username)->first(); 
-        $album = Album::find($albumId); 
+
+        $album = Album::find($albumId);
 
         if( ! $album ){
             return redirect()->back() ; 
         } 
 
-        return view('user.images')->with([
+        return view('album.images')->with([
             'user' => $user,
             'album' => $album
         ]); ;
@@ -114,12 +86,55 @@ class AlbumController extends Controller
                     ->save( public_path( $album
                     ->getImagePath(Auth::user()->id,  $album->id ) . $filename ));
 
-            return redirect()->back()->with('info', 'image uploaded successfully');
+            return redirect()->back()->with('info', 'Image uploaded successfully');
 
         }
+    }
+    public function getLike($imageId){
+
+        $image = Album::find($imageId);
+
+        if(  Auth::user()->hasLikedImage($image) ) {
+             return redirect()->back(); 
+        } 
+
+        if( ! $image ) redirect()-back(); 
+
+        $image->likes()->create([
+            'user_id' => Auth::user()->id , 
+        ]);
+
+        return redirect()->back();
+    }
+
+    public function deleteAlbum($albumId){
+
+        $album = Album::find($albumId); 
+
+        $image = Album::where('parent_id', $albumId) ;
+
+        if( ! $album ) redirect()->back() ;
+
+        $album->removeAlbum(Auth::user()->id,$albumId); 
+        
+        $album->delete(); 
+        $image->delete(); 
+
+        return redirect()->back()->with('info', 'Album deleted successfully') ; 
 
     }
 
+    public function deleteImage($albumId, $imageId){
 
+        $image = Album::find($imageId); 
+    
+        if( ! $image) redirect()->back() ;
+
+        $image->deleteImage($albumId, Auth::user()->id, $image->body) ; 
+
+        $image->delete();
+
+        return redirect()->back();  
+    }
 
 }

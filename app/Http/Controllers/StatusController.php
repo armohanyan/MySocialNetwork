@@ -33,7 +33,6 @@ class StatusController extends Controller
         $this->validate($request, [
             "comment-{$statusId}" => 'required',
         ],
-        
          [
             'required'=> 'The comment must be field'
         ]); 
@@ -54,13 +53,9 @@ class StatusController extends Controller
 
         $status = Status::find($statusId); 
 
-        if( ! $status) redirect()->back(); 
-
-        if( Auth::user()->hasLikedStatus($status) ){
+        if( Auth::user()->hasLikedStatus($status) ){ 
             return redirect()->back();
-        }
-
-        if( Auth::user()->hasLikedStatus($status) ) redirect()->back();
+         }
 
         $status->likes()->create([
             'user_id' => Auth::user()->id, 

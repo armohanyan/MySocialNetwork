@@ -1,5 +1,3 @@
-
-
   <div class="card p-2 mt-2 mr-2" style="font-size:12px " >
       <div class="d-flex align-items-center">
           <div class="image">

@@ -28,6 +28,8 @@
     <link rel="stylesheet" type="text/css" href="/css/util.css">
     <link rel="stylesheet" type="text/css" href="/css/main.css">
     <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/app.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.2/css/lightbox.min.css">
@@ -41,7 +43,7 @@
 </div>
 
 <!--===============================================================================================-->
-<script src="/jquery/jquery-3.2.1.min.js"></script>
+{{-- <script src="/jquery/jquery-3.2.1.min.js"></script> --}}
 <!--===============================================================================================-->
 <script src="/vendor/animsition/js/animsition.min.js"></script>
 <!--===============================================================================================-->
@@ -54,10 +56,10 @@
 <script src="/vendor/daterangepicker/daterangepicker.js"></script>
 <!--===============================================================================================-->
 <script src="/vendor/countdowntime/countdowntime.js"></script>
+<script src="/"></script>
 <!--===============================================================================================-->
 <script src="/js/main.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.2/js/lightbox.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.2/js/lightbox.min.js"></script>
 </body>
 </html>

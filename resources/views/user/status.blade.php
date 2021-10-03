@@ -3,8 +3,9 @@
         <div class="card-header">
             <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link active" id="posts-tab"   a-toggle="tab" href="#posts" role="tab" aria-controls="posts" aria-selected="true">Make
-                        a publication</a>
+                    <a class="nav-link active" id="posts-tab"   a-toggle="tab" href="#posts" role="tab" aria-controls="posts" aria-selected="true">
+                        Make a publication
+                    </a>
                 </li>
             </ul>
         </div>
@@ -18,11 +19,13 @@
                                   placeholder="What's new {{ Auth::user()->getfirstNameOrUsername() }} ?"  
                                   id="floatingTextarea2" style="height: 150px; width:550px">
                             </textarea>
+
                             @if ($errors->has('body'))
                                 <small  class="invalid-feedback">
                                     {{ $errors->first('body') }}
                                 </small>
                             @endif
+
                             <div class="btn-toolbar justify-content-between">
                                 <div class="btn-group">
                                     <button type="submit" class="btn btn-primary  m-1 mr-4">Share</button>
@@ -31,13 +34,10 @@
                         </form> 
                     </div>
                 </div>
-            </div>
-           
+            </div>        
         </div>
     </div>
-
 </div>  
-
       @if( $statuses->count() )
             @foreach ( $statuses as $status )
                 <div class="card gedf-card mt-2">
@@ -68,56 +68,50 @@
                     </div>
                     <div class="card-body">
                         <div class="text-muted h7 mb-2"> <i class="fa fa-clock-o"></i> {{ $status->created_at->diffForHumans() }}</div>   
-                            <h4 class="card-title">{{ $status->body }} </h4>                    
+                        <h4 class="card-title">{{ $status->body }} </h4>                    
                     </div>
-                        <hr>
+                    <hr>
                     <div class="container mt-3 ">
                         <div class="d-flex  row">
                             <div class="" style="width: 720px">
-                                <div class="d-flex flex-column comment-section">    
-                                <div class="bg-white p-2">
-                                    @foreach ( $status->comments as $comment )
-                                    <div class="media">
-                                        <a class="pull-left" href="{{ route('user.profile', $comment->user->username ) }}">
-                                            @if( $comment->user->avatar )
-                                              <img src="{{  $comment->user->getAvatarPath( $comment->user->id) .$comment->user->avatar }}" alt="Admin" class="rounded-circle" width="50">
-                                            @else
-                                                <img src="{{  $comment->user->getAvatarUrl() }}" alt="Admin" class="rounded-circle" width="50">
-                                            @endif                                           </a>
-                                        <div class="media-body"> 
-                                         
-                                            <h5 class="media-heading">{{ $comment->user->getNameOrUsername() }}</h5>
-                                                <li style="font-size:10px "><i class="fa fa-calendar"></i>{{ $comment->created_at->diffForHumans() }}</li>
-                                            <div class="body">
-                                                <p>{{ $comment->body }} </p>
-                                            </div>     
-                                             <ul class="list-unstyled list-inline media-detail pull-right">
-                                                 {{-- <li class=""><a href="">Like</a></li> --}}
-                                                 {{-- <li class=""><a href="">Reply</a></li> --}}
-                                            {{-- </ul> --}}
+                                 <div class="d-flex flex-column comment-section">    
+                                    <div class="bg-white p-2">
+                                     @foreach ( $status->comments as $comment )
+                                        <div class="media">
+                                            <a class="pull-left" href="{{ route('user.profile', $comment->user->username ) }}">
+                                                @if( $comment->user->avatar )
+                                                <img src="{{  $comment->user->getAvatarPath( $comment->user->id) .$comment->user->avatar }}" alt="Admin" class="rounded-circle" width="50">
+                                                @else
+                                                    <img src="{{  $comment->user->getAvatarUrl() }}" alt="Admin" class="rounded-circle" width="50">
+                                                @endif                                           </a>
+                                            <div class="media-body"> 
+                                                <h5 class="media-heading">{{ $comment->user->getNameOrUsername() }}</h5>
+                                                    <li style="font-size:10px "><i class="fa fa-calendar"></i>{{ $comment->created_at->diffForHumans() }}</li>
+                                                <div class="body">
+                                                    <p>{{ $comment->body }} </p>
+                                                </div>     
+                                                <ul class="list-unstyled list-inline media-detail pull-right">
+                                            </div>
                                         </div>
-                                     </div>
                                      <hr> 
-                                    @endforeach   
-                                                                 
+                                     @endforeach   
                                 </div>
                                     <div class="bg-light p-2 col-md-25">
-                                        <div class="d-flex flex-row align-items-start">
+                                      <div class="d-flex flex-row align-items-start">
                                             @if(  Auth::user()->avatar )
                                                 <img src="{{   Auth::user()->getAvatarPath(  Auth::user()->id) . Auth::user()->avatar }}" alt="Admin" class="rounded-circle" width="50">
                                             @else
                                                 <img src="{{   Auth::user()->getAvatarUrl() }}" alt="Admin" class="rounded-circle" width="50">
-                                            @endif                                                 <form class="mt-1 ml-3" action="{{ route('post.comment', $status->id ) }}" method="POST" >
+                                            @endif 
+                                            
+                                        <form class="mt-1 ml-3" action="{{ route('post.comment', $status->id ) }}" method="POST" >
                                             @csrf
-                                                <textarea  name="comment-{{ $status->id }}" class="form-control p-0
-                                                    {{ $errors->has('comment-'.$status->id ) ? 'is-invalid' : '' }} "
-                                                    style="height: 90px; width:550px">
-                                            </textarea>
-                                                @if ($errors->has('comment-'.$status->id ))
-                                                    <small  class="invalid-feedback">
-                                                        {{ $errors->first('comment-'.$status->id ) }}
-                                                    </small>
-                                                @endif
+                                            <textarea  name="comment-{{ $status->id }}" class="form-control p-0{{ $errors->has('comment-'.$status->id ) ? 'is-invalid' : '' }} "style="height: 90px; width:550px"> </textarea>
+                                            @if ($errors->has('comment-'.$status->id ))
+                                                <small  class="invalid-feedback">
+                                                    {{ $errors->first('comment-'.$status->id ) }}
+                                                </small>
+                                            @endif
                                             <div class="mt-2 text-right">
                                                 <button class="btn btn-primary btn-sm shadow-none" type="submit">Send</button>
                                             </div>
@@ -133,7 +127,6 @@
                           <a href="{{ route('get.like', $status) }}" class="card-link"><i class="fa fa-gittip"></i> Like</a>
                         @endif
                         <p> {{ $status->likes->count() }} {{ Str::plural('like', $status->likes->count() ) }} </p>
-                        {{-- <a href="#" class="card-link"><i class="fa fa-comment"></i> Comment</a> --}}
                     </div>
                 </div>
             @endforeach

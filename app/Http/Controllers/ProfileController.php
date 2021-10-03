@@ -12,8 +12,8 @@ class ProfileController extends Controller
    public function getProfile($username){
       $user =  User::where('username', $username)->first() ;
       $statuses = Status::notReply()->where('user_id' , $user->id) 
-       ->orderBy('created_at', 'DESC')
-       ->paginate(10);
+         ->orderBy('created_at', 'DESC')
+         ->paginate(10);
       
       if( ! $user){
           abort(404) ; 
@@ -26,7 +26,9 @@ class ProfileController extends Controller
    }
 
    public function getEdit(){
+      
       $user = Auth::user(); 
+
       return view('profile.edit')->with( compact('user'));
    }
 
@@ -39,12 +41,14 @@ class ProfileController extends Controller
          $user->clearAvatar($user->id); 
 
          $avatar = $request->file('avatar'); 
+
          $filename = time() . '.' . $avatar->getClientOriginalExtension(); 
 
          Image::make($avatar)->resize(300, 300)
                ->save( public_path( $user->getAvatarPath($user->id) . $filename ));
 
          $user->avatar = $filename ; 
+
          $user->save(); 
          
       }
