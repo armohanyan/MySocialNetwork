@@ -42,8 +42,8 @@
                               <a href="{{ route('get.image', [ 'albumId'=> $album->id ,'username' => $user->username ] ) }} " class="btn btn-sm btn-outline-secondary">View</a>
                               @if (Auth::user()->id == $album->user->id)
                                 <form action="{{ route('delete.album', $album->id)}}" method="post" style="display: inline-block" >
-                                    @csrf
-                                    @method('DELETE')
+                                  @csrf
+                                  @method('DELETE')
                                   <button  type="submit" class="btn btn-danger ">Delete</button>
                                 </form>
                               @endif

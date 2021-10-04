@@ -24,7 +24,7 @@ class StatusController extends Controller
     }
 
     public function destroy($id){
-        Status::where('id', $id)->delete(); 
+             Status::where('id', $id)->delete(); 
              return redirect()->back(); 
     }
 
@@ -49,18 +49,24 @@ class StatusController extends Controller
         return redirect()->back() ; 
     }
 
-    public function getLike($statusId){
+    public function getLike( Request $request, $statusId){
 
+        if ( $request->ajax() ){
+            
         $status = Status::find($statusId); 
 
         if( Auth::user()->hasLikedStatus($status) ){ 
-            return redirect()->back();
-         }
+            return view('ajax.like', ['status' => $status])->render();
+        }
 
         $status->likes()->create([
             'user_id' => Auth::user()->id, 
         ]);     
 
-        return redirect()->back() ; 
+        $status = Status::find($statusId); 
+
+            return view('ajax.like', ['status' => $status])->render();
+                
+        }  
     }
 }

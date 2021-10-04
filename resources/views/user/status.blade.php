@@ -39,7 +39,7 @@
     </div>
 </div>  
       @if( $statuses->count() )
-            @foreach ( $statuses as $status )
+        @foreach ( $statuses as $status )
                 <div class="card gedf-card mt-2">
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
@@ -102,8 +102,7 @@
                                                 <img src="{{   Auth::user()->getAvatarPath(  Auth::user()->id) . Auth::user()->avatar }}" alt="Admin" class="rounded-circle" width="50">
                                             @else
                                                 <img src="{{   Auth::user()->getAvatarUrl() }}" alt="Admin" class="rounded-circle" width="50">
-                                            @endif 
-                                            
+                                            @endif      
                                         <form class="mt-1 ml-3" action="{{ route('post.comment', $status->id ) }}" method="POST" >
                                             @csrf
                                             <textarea  name="comment-{{ $status->id }}" class="form-control p-0{{ $errors->has('comment-'.$status->id ) ? 'is-invalid' : '' }} "style="height: 90px; width:550px"> </textarea>
@@ -122,14 +121,37 @@
                         </div>
                     </div>
                 </div>
-                    <div class="card-footer">
-                        @if (  Auth::user()->id !== $status->user->id)
-                          <a href="{{ route('get.like', $status) }}" class="card-link"><i class="fa fa-gittip"></i> Like</a>
-                        @endif
-                        <p> {{ $status->likes->count() }} {{ Str::plural('like', $status->likes->count() ) }} </p>
-                    </div>
+                <div class="card-footer like-button-result">
+                    @if ( Auth::user()->id !== $status->user->id )
+                      <button data-like="likeButton" class="btn btn-primary" id="likeButton"> <i class="fa fa-gittip"></i> Like</button>
+                    @endif
+                    <span> {{ $status->likes->count() }} {{ Str::plural('like', $status->likes->count() ) }} </span>
+                </div>
                 </div>
             @endforeach
         @else
         <h1>There is no status yet </h1>
       @endif
+
+
+@section('js.content')
+<script type="text/javascript">  
+
+$(document).ready(function() {
+    $("#likeButton").click(function(e){
+        e.preventDefault();            
+
+        $.ajax({
+            url: "{{ route('get.like', $status->id )}}",
+            type:'GET',
+            dataType: 'html', 
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            success: function(response) {
+                $('.like-button-result').html(response) ;
+            }
+        });
+        
+    });        
+});
+</script>
+@endsection
