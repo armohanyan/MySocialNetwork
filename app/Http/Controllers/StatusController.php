@@ -56,17 +56,22 @@ class StatusController extends Controller
         $status = Status::find($statusId); 
 
         if( Auth::user()->hasLikedStatus($status) ){ 
-            return view('ajax.like', ['status' => $status])->render();
+            return response()->json([
+                'success' => false 
+            ]);
         }
 
         $status->likes()->create([
             'user_id' => Auth::user()->id, 
-        ]);     
-
+        ]);
+        
         $status = Status::find($statusId); 
 
-            return view('ajax.like', ['status' => $status])->render();
-                
+            return response()->json([
+                'success' => true,
+                'html' => view('ajax.like', ['status' => $status])->render()
+            ]);     
+
         }  
     }
 }

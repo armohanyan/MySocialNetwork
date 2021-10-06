@@ -121,11 +121,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-footer like-button-result">
+                <div class="card-footer" id="like-button-result">   
                     @if ( Auth::user()->id !== $status->user->id )
-                      <button data-like="likeButton" class="btn btn-primary" id="likeButton"> <i class="fa fa-gittip"></i> Like</button>
+                        <button data-id="{{ route('get.like', $status->id) }}" class="btn btn-primary likeButton" > <i class="fa fa-gittip"></i> Like</button>
                     @endif
-                    <span> {{ $status->likes->count() }} {{ Str::plural('like', $status->likes->count() ) }} </span>
+                        <span> ( {{ $status->likes->count() }} {{ Str::plural('like', $status->likes->count() ) }} )</span>
                 </div>
                 </div>
             @endforeach
@@ -133,25 +133,26 @@
         <h1>There is no status yet </h1>
       @endif
 
+ <script type="text/javascript">  
 
-@section('js.content')
-<script type="text/javascript">  
-
-$(document).ready(function() {
-    $("#likeButton").click(function(e){
-        e.preventDefault();            
-
-        $.ajax({
-            url: "{{ route('get.like', $status->id )}}",
-            type:'GET',
-            dataType: 'html', 
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            success: function(response) {
-                $('.like-button-result').html(response) ;
-            }
-        });
-        
-    });        
-});
-</script>
-@endsection
+    $(document).ready(function() {
+        $(".likeButton").click(function(e){
+            e.preventDefault(); 
+            $route = $(this).data("id")   
+            $self = $(this)
+            $.ajax({
+                url: $route, 
+                type:'GET',
+                dataType: 'html', 
+                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                success: function(response) {
+                    const r = JSON.parse(response)       
+                    if(r.status !== false){
+                    $self.parent('#like-button-result').html(r.html)
+                    }
+                }    
+            });
+            
+        });        
+    });
+  </script>

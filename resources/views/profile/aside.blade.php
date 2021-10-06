@@ -11,7 +11,7 @@
             <h4> {{ $user->getNameorUsername()}}</h4>
             <p class="text-secondary mb-1">{{ $user->username }}</p>
 
-            @if(Auth::user()->hasFriendRequestPending($user) )
+            @if( Auth::user()->hasFriendRequestPending($user) )
             <p> I am Waiting {{ $user->getNameOrusername() }}</p>
 
             @elseif( Auth::user()->hasFriendRequestReceived($user) )

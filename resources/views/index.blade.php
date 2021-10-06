@@ -5,7 +5,7 @@
     <div class="container">
         @foreach ( $statuses as $status )
             <div class="card gedf-card mt-2 m-auto width-"  style="width:80%">
-              <div class="card-header">
+              <div class="card-header mt-3">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="d-flex justify-content-between align-items-center">
                         <a href="{{ route('user.profile',  $status->user->username) }}">
@@ -89,9 +89,9 @@
                     </div>
                 </div>
             </div>
-            <div class="card-footer">   
-                @if (  Auth::user()->id !== $status->user->id)
-                    <button data-like="likeButton" id="likeButton" class="btn btn-primary"> <i class="fa fa-gittip"></i> Like</button>
+            <div class="card-footer" id="like-button-result">   
+                @if ( Auth::user()->id !== $status->user->id )
+                    <button data-id="{{ route('get.like', $status->id) }}"  class="btn btn-primary likeButton" > <i class="fa fa-gittip"></i> Like</button>
                 @endif
                     <span> ( {{ $status->likes->count() }} {{ Str::plural('like', $status->likes->count() ) }} )</span>
             </div>
@@ -102,4 +102,31 @@
     <h1>There is no status yet </h1>
 @endif
 
+@endsection
+
+@section('js.content')
+
+<script type="text/javascript">  
+
+$(document).ready(function() {
+    $(".likeButton").click(function(e){
+        e.preventDefault(); 
+        $route = $(this).data("id")   
+        $self = $(this)
+        $.ajax({
+            url: $route, 
+            type:'GET',
+            dataType: 'html', 
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            success: function(response) {
+                const r = JSON.parse(response)       
+                if(r.status !== false){
+                $self.parent('#like-button-result').html(r.html)
+                }
+            }    
+        });
+        
+    });        
+});
+</script>
 @endsection
